@@ -1,0 +1,8 @@
+[MASTER]
+max-line-length=88
+
+[MESSAGES CONTROL]
+disable=E1101,C0330,R0913
+
+[FORMAT]
+max-line-length=88
