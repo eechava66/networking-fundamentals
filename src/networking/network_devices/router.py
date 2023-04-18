@@ -96,7 +96,6 @@ class Router:
 
         self.add_route(source_ip, source)
         dest = message["dest"]
-        print(message)
         if dest == self.flood_identifier:
             self.mac_table[message["curr"]] = message["port"]
             self.send_arp_response(source, source_ip)
@@ -120,9 +119,6 @@ class Router:
                                 logging.info(
                                     f"Sending request from: {self.device_name} to: {device.device_name} trough port: {port}"
                                 )
-                                import time
-
-                                time.sleep(5)
                                 device.message = {
                                     **message,
                                     "curr": self.mac_address,
