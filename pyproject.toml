@@ -20,12 +20,10 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.black]
-line_length = 88
+line_length = 100
 docstring-style = "google"
 
 [tool.isort]
-# Line length
-line_length = 88
 profile = "black"
 
 # Force vertical/horizontal whitespace where necessary

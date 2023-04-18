@@ -1,8 +1,2 @@
-[MASTER]
-max-line-length=88
-
 [MESSAGES CONTROL]
 disable=E1101,R0913,missing-module-docstring
-
-[FORMAT]
-max-line-length=88
