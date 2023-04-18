@@ -1,3 +1,4 @@
+import logging
 from typing import (
     Dict,
 )
@@ -35,10 +36,10 @@ class Host(Device):
             "source": self.mac_address,
             "dest": "ffff",
             "source_ip": self.ip_address,
-            "current_source": self.mac_address,
+            "curr": self.mac_address,
         }
         for device, port in self.connected_devices:
-            print(f"Sending ARP from: {self.device_name} to: {device.device_name} trough port: {port}")
+            logging.info(f"Sending ARP from: {self.device_name} to: {device.device_name} trough port: {port}")
             device.message = {**frame, "port": port}
 
     def send_data(self, destination_ip: str, data: str, response: bool = False):
@@ -46,17 +47,17 @@ class Host(Device):
             "source_ip": self.ip_address,
             "dest_ip": destination_ip,
             "source": self.mac_address,
-            "current_source": self.mac_address,
+            "curr": self.mac_address,
             "data": data,
         }
         if response:
             packet["response"] = True
-        print(f"Sending data from {self.ip_address} to {destination_ip}")
+        logging.info(f"Sending data from {self.ip_address} to {destination_ip}")
         if destination_ip in self.routing_table.keys():
             packet["dest"] = self.routing_table[destination_ip]
             for device, port in self.connected_devices:
                 if isinstance(device, Switch):
-                    print(f"Sending data to: {device.device_name} trough port {port}")
+                    logging.info(f"Sending data to: {device.device_name} trough port {port}")
                     device.message = {**packet, "port": port}
                     return
         else:
@@ -69,18 +70,18 @@ class Host(Device):
             "dest": destination_mac,
             "source": self.mac_address,
             "data": "arp_response",
-            "current_source": self.mac_address,
+            "curr": self.mac_address,
             "response": True,
         }
         for device, port in self.connected_devices:
             if isinstance(device, Switch):
-                print(
+                logging.info(
                     f"Sending ARP Response from: {self.device_name} trough switch: {device.device_name} and port: {port} to MAC: {destination_mac}"
                 )
                 device.message = {**arp_response, "port": port}
 
     def add_route(self, ip: str, mac: str):
-        print(f"Adding route in: {self.device_name} with IP: {ip} and MAC: {mac}")
+        logging.info(f"Adding route in: {self.device_name} with IP: {ip} and MAC: {mac}")
         self.routing_table[ip] = mac
 
     @property
@@ -94,14 +95,14 @@ class Host(Device):
         self.add_route(source_ip, source)
         dest = message["dest"]
         if dest == self.flood_identifier:
-            self.mac_table["current_source"] = message["port"]
+            self.mac_table["curr"] = message["port"]
             self.send_arp_response(source)
         elif dest == self.mac_address:
-            print(f"Message received at: {self.device_name}!! ")
+            logging.info(f"Message received at: {self.device_name}!! ")
             data = message["data"]
-            print(f"Message is: {data}")
+            logging.info(f"Message is: {data}")
             if "response" not in message:
-                print(f"Sending response to IP {source_ip}")
+                logging.info(f"Sending response to IP {source_ip}")
                 self.send_data(source_ip, "Got your message ;)", True)
         else:
-            print(f"Message discarded at: {self.device_name}")
+            logging.info(f"Message discarded at: {self.device_name}")

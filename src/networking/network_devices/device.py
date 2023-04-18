@@ -2,6 +2,7 @@ from abc import (
     ABC,
     abstractmethod,
 )
+import logging
 import re
 from typing import (
     Dict,
@@ -36,7 +37,7 @@ class Device(ABC):
     def connect_device(self, new_device: "Device", port: int):
         if port >= self.maximum_devices:
             raise ValueError(f"{self.device_name} only supports up to {self.maximum_devices} port number")
-        print(f"Connecting device {self.device_name} to {new_device.device_name} using port: {port}")
+        logging.debug(f"Connecting device {self.device_name} to {new_device.device_name} using port: {port}")
         self.connected_devices.append([new_device, port])
 
     @property

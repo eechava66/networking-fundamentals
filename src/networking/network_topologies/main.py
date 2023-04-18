@@ -1,3 +1,5 @@
+import logging
+
 from networking.network_devices import (
     Host,
     Switch,
@@ -5,6 +7,8 @@ from networking.network_devices import (
 from networking.network_utilities import (
     connect_devices,
 )
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 #    I will manually manage the networks in order to prevent creating a Network object
 #    which will just increase the complexity and won't provide any other benefit.
