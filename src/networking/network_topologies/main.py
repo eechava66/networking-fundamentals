@@ -1,12 +1,7 @@
 import logging
 
-from networking.network_devices import (
-    Host,
-    Switch,
-)
-from networking.network_utilities import (
-    connect_devices,
-)
+from networking.network_devices import Host, Switch
+from networking.network_utilities import connect_devices
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
@@ -14,13 +9,14 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 #    which will just increase the complexity and won't provide any other benefit.
 
 # 192.168.0.1
+network = "192.168.0.0/24"
 default_gateway_network_A = "192.168.0.1"
 switch_A = Switch("AA:BB:AB:DD:EE:FF", "192.168.0.5", "SwitchA", 10)
 switch_B = Switch("AA:BB:CC:DD:EE:FF", "192.168.0.7", "SwitchB", 10)
-host_A = Host("FF:BB:CC:DD:EE:FF", "192.168.0.2", "HostA", default_gateway_network_A)
-host_B = Host("BB:BB:FF:DD:EE:FF", "192.168.0.3", "HostB", default_gateway_network_A)
-host_C = Host("AA:AA:AA:DD:EE:FF", "192.168.0.4", "HostC", default_gateway_network_A)
-host_D = Host("AA:FA:AA:DD:EE:FF", "192.168.0.6", "HostD", default_gateway_network_A)
+host_A = Host("FF:BB:CC:DD:EE:FF", "192.168.0.2", "HostA", default_gateway_network_A, network)
+host_B = Host("BB:BB:FF:DD:EE:FF", "192.168.0.3", "HostB", default_gateway_network_A, network)
+host_C = Host("AA:AA:AA:DD:EE:FF", "192.168.0.4", "HostC", default_gateway_network_A, network)
+host_D = Host("AA:FA:AA:DD:EE:FF", "192.168.0.6", "HostD", default_gateway_network_A, network)
 
 connect_devices(host_A, switch_B, 0)
 connect_devices(switch_B, host_B, 1)

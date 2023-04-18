@@ -1,11 +1,7 @@
 import logging
-from typing import (
-    Dict,
-)
+from typing import Dict, Optional
 
-from networking.network_devices.device import (
-    Device,
-)
+from networking.network_devices.device import Device
 
 
 class Switch(Device):
@@ -18,10 +14,12 @@ class Switch(Device):
         ip_address: str,
         device_name: str,
         maximum_devices: int = 3,
+        network: Optional[str] = None,
     ) -> None:
         super().__init__(mac_address, ip_address, device_name, maximum_devices)
         self.mac_table = {}
         self.flood_identifier = "ffff"
+        self.network = network
 
     @property
     def message(self):
@@ -53,7 +51,7 @@ class Switch(Device):
         dest = message["dest"]
         for device, port in self.connected_devices:
             if device.mac_address == dest:
-                logging.info(f"Forwarding from {self.device_name} to :{dest} using port {port}")
+                logging.info(f"Forwarding from: {self.device_name} to: {dest} using port {port}")
                 device.message = message
                 return
 
