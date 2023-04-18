@@ -1,2 +1,2 @@
 [MESSAGES CONTROL]
-disable=E1101,R0913,missing-module-docstring
+disable=E1101,R0913,missing-module-docstring,W1203
