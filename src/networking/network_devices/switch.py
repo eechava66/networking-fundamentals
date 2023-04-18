@@ -24,43 +24,37 @@ class Switch(Device):
         self.flood_identifier = "ffff"
 
     @property
-    def messages(self):
-        return self._messages
+    def message(self):
+        return self._message
 
-    @messages.setter
-    def messages(self, inbox: List[Dict]):
-        for message in inbox:
-            source = message["current_source"]
-            port = message["port"]
-            dest = message["dest"]
-            self.learn(source, port)
-            if dest in self.mac_table.keys():
-                self.forward(message)
-                inbox.remove(message)
-            else:
-                self.flood(message)
-                inbox.remove(message)
+    @message.setter
+    def message(self, message):
+        source = message["current_source"]
+        port = message["port"]
+        dest = message["dest"]
+        self.learn(source, port)
+        if dest in self.mac_table.keys():
+            self.forward(message)
+        else:
+            self.flood(message)
 
     def flood(self, frame: Dict):
         for device, port in self.connected_devices:
             if device.mac_address == frame["current_source"]:
                 continue
             print(f"Flooding from {self.device_name} to: {device.device_name} using port {port}")
-            device.messages = [
-                *device.messages,
-                {
-                    **frame,
-                    "port": port,
-                    "current_source": self.mac_address,
-                },
-            ]
+            device.message = {
+                **frame,
+                "port": port,
+                "current_source": self.mac_address,
+            }
 
     def forward(self, message: Dict):
         dest = message["dest"]
         for device, port in self.connected_devices:
             if device.mac_address == dest:
                 print(f"Forwarding from {self.device_name} to :{dest} using port {port}")
-                device.messages = [*device.messages, message]
+                device.message = message
                 return
 
         print(self.mac_table)

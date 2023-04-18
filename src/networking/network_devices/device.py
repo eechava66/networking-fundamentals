@@ -13,7 +13,7 @@ from typing import (
 class Device(ABC):
     """Defines a device"""
 
-    _messages: List[Dict]
+    _message: Dict
     connected_devices: List[Tuple["Device", int]]
 
     def __init__(
@@ -28,28 +28,25 @@ class Device(ABC):
         self.device_name = device_name
         self.mac_address = mac_address
         self.ip_address = ip_address
-        self._messages = []
+        self._message = {}
         self.connected_devices = []
         self.maximum_devices = maximum_devices
+        self.flood_identifier = "ffff"
 
     def connect_device(self, new_device: "Device", port: int):
         if port >= self.maximum_devices:
-            raise ValueError(
-                f"{self.device_name} only supports up to {self.maximum_devices} port number"
-            )
-        print(
-            f"Connecting device {self.device_name} to {new_device.device_name} using port: {port}"
-        )
+            raise ValueError(f"{self.device_name} only supports up to {self.maximum_devices} port number")
+        print(f"Connecting device {self.device_name} to {new_device.device_name} using port: {port}")
         self.connected_devices.append([new_device, port])
 
     @property
     @abstractmethod
-    def messages(self):
-        return self._messages
+    def message(self):
+        return self._message
 
-    @messages.setter
+    @message.setter
     @abstractmethod
-    def messages(self, inbox):
+    def message(self, inbox):
         pass
 
     @property
